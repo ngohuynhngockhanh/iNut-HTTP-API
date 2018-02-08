@@ -1,80 +1,313 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://connect.mysmarthome.vn/api/1.0/
 
-# ngohuynhngockhanh
+# iNut REST API
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Tập hợp tài liệu về điều khiển, quản lý thiết bị iNut
 
-## Questions Collection [/questions]
+## Xem trạng thái, thông tin của thiết bị và cảm biến - Request All Devices [/request/{uuid}/{node_id}/{token}/req_device]
 
-### List All Questions [GET]
+### Liệt kê danh sách trạng thái của toàn bộ thiết bị trong một node [GET]
+
+Bạn có thể lấy được danh sách thiết bị trong một node. Mọi thông tin cơ bản có thể có sẽ được trình diện ở đây
+
++ Parameters
+    + uuid (required, string, `PsxUPldlbBNEuEUTi7Ci5yls77R2`) ... User ID - ID người dùng mà bạn dùng để điều khiển thiết bị. Xem trong app
+    + node_id (required, string, `r1O92dtSz`) ... Node ID - ID của node cảm biến / thiết bị của bạn. Xem trong app
+    + token (required, string, `301fd2e614a97927804613e73373ded2991661182107`) ... API Token - Token do bạn tạo ra trong app để điều khiển các thiết bị
 
 + Response 200 (application/json)
+    + Body
 
-        [
+    
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "status": 0,
+                "count": 1,
+                "devices": [
                     {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
+                        "node_id": "r1O92dtSz",
+                        "id": 0,
+                        "state": "ON",
+                        "type": "TOGGLE"
                     }
                 ]
             }
-        ]
+        
+    + Attributes (Request Result)
+        + count: 1 (number, required) - `Số lượng thiết bị`
+        + devices: [] (array[Device], required) - `Danh sách thiết bị`
+        
+## Đổi trạng thái thiết bị TOGGLE - [/request/{uuid}/{node_id}/{token}/req_device_toggle]
 
-### Create a New Question [POST]
+### Cập nhập trạng thái thiết bị TOGGLE [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+Cập nhập trạng thái thiết bị TOGGLE. Bạn có thể gửi lệnh BẬT, TẮT, ĐỔI TRẠNG THÁI cho các thiết bị TOGGLE
+
+        
++ Parameters
+    + uuid (required, string, `PsxUPldlbBNEuEUTi7Ci5yls77R2`) ... User ID - ID người dùng mà bạn dùng để điều khiển thiết bị. Xem trong app
+    + node_id (required, string, `r1O92dtSz`) ... Node ID - ID của node cảm biến / thiết bị của bạn. Xem trong app
+    + token (required, string, `301fd2e614a97927804613e73373ded2991661182107`) ... API Token - Token do bạn tạo ra trong app để điều khiển các thiết bị
 
 + Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
-    + Headers
-
-            Location: /questions/2
-
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "id": 0,
+                "command": "TOGGLE"
+            }
+            
+            
+    + Attributes (Toggle Request)
+    
+
++ Response 200 (application/json)
+    + Body
+
+    
+            {
+                "status": 0
+            }
+        
+    + Attributes (Request Result)
+
+
+## Xem thông tin hẹn giờ [/request/{uuid}/{node_id}/{token}/req_timer]
+
+### Liệt kê danh sách các lịch hẹn giờ của node [GET]
+
+Ngoài danh sách các timer ra, bạn sẽ biết ô timer nào còn trống để có thể thêm hẹn giờ mới
+
++ Parameters
+    + uuid (required, string, `PsxUPldlbBNEuEUTi7Ci5yls77R2`) ... User ID - ID người dùng mà bạn dùng để điều khiển thiết bị. Xem trong app
+    + node_id (required, string, `r1O92dtSz`) ... Node ID - ID của node cảm biến / thiết bị của bạn. Xem trong app
+    + token (required, string, `301fd2e614a97927804613e73373ded2991661182107`) ... API Token - Token do bạn tạo ra trong app để điều khiển các thiết bị
+
++ Response 200 (application/json)
+    + Body
+
+    
+            {
+                "status": 0,
+                "free_id": 7,
+                "timers": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "id": 0,
+                        "name": "",
+                        "enabled": 1,
+                        "last_run_time": 1518021601,
+                        "excute_at": 946744801,
+                        "end": 0,
+                        "start": 0,
+                        "command": "ON",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 2,
+                        "init": true
+                    },
+                    {
+                        "id": 1,
+                        "name": "",
+                        "enabled": 1,
+                        "last_run_time": 1518044401,
+                        "excute_at": 946767601,
+                        "end": 0,
+                        "start": 0,
+                        "command": "OFF",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 2,
+                        "init": true
+                    },
+                    {
+                        "id": 2,
+                        "name": "",
+                        "enabled": 1,
+                        "last_run_time": 1517958301,
+                        "excute_at": 946767901,
+                        "end": 0,
+                        "start": 0,
+                        "command": "OFF",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 2,
+                        "init": true
+                    },
+                    {
+                        "id": 3,
+                        "name": "",
+                        "enabled": 1,
+                        "last_run_time": 0,
+                        "excute_at": 946767904,
+                        "end": 1518713640,
+                        "start": 1518627240,
+                        "command": "ON",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 2,
+                        "init": true
+                    },
+                    {
+                        "id": 4,
+                        "name": "",
+                        "enabled": 1,
+                        "last_run_time": 1518001201,
+                        "excute_at": 946724401,
+                        "end": 0,
+                        "start": 0,
+                        "command": "ON",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 2,
+                        "init": true
+                    },
+                    {
+                        "id": 5,
+                        "name": "",
+                        "enabled": 1,
+                        "last_run_time": 1518006601,
+                        "excute_at": 946729801,
+                        "end": 0,
+                        "start": 0,
+                        "command": "ON",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 2,
+                        "init": true
+                    },
+                    {
+                        "id": 6,
+                        "name": "",
+                        "enabled": 0,
+                        "last_run_time": 1518044423,
+                        "excute_at": 1,
+                        "end": 0,
+                        "start": 0,
+                        "command": "TOGGLE",
+                        "days_in_week": "0,1,2,3,4,5,6",
+                        "device_id": 0,
+                        "timer_type": 1,
+                        "init": true
                     }
                 ]
             }
+        
+            
+    + Attributes (Request Result)
+    
+        + free_id: 1 (number, required) - `id block hẹn giờ`
+        + timers: [] (array[TimerBlock], required) - `danh sách block hẹn giờ`
+            
+## Thêm mới, cập nhật hoặc xóa timer - [/request/{uuid}/{node_id}/{token}/req_timer_block]
+
+### Thêm mới, cập nhập timer [POST]
+
+Cập nhập trạng thái thiết bị TOGGLE. Bạn có thể gửi lệnh BẬT, TẮT, ĐỔI TRẠNG THÁI cho các thiết bị TOGGLE
+
+
++ Parameters
+    + uuid (required, string, `PsxUPldlbBNEuEUTi7Ci5yls77R2`) ... User ID - ID người dùng mà bạn dùng để điều khiển thiết bị. Xem trong app
+    + node_id (required, string, `r1O92dtSz`) ... Node ID - ID của node cảm biến / thiết bị của bạn. Xem trong app
+    + token (required, string, `301fd2e614a97927804613e73373ded2991661182107`) ... API Token - Token do bạn tạo ra trong app để điều khiển các thiết bị
+
++ Request (application/json)
+ 
+ 
+    + Attributes (TimerBlock)
+        + method: "POST" (string, optional) - `POST - để tạo mới block`
+    
+    + Body
+
+            {
+                "command": "TOGGLE",
+                "days_in_week": "0,1,2,3,4,5,6",
+                "device_id": 0,
+                "enabled": 1,
+                "end": 0,
+                "excute_at": 2,
+                "init": false,
+                "method": "POST",
+                "name": "",
+                "start": 0,
+                "timer_id": 2,
+                "timer_type": 1
+            }
+            
+    
+    
+
++ Response 200 (application/json)
+    + Body
+
+    
+            {
+                "status": 0
+            }
+        
+    + Attributes (Request Result)
+    
+### Xóa timer [POST]
+
+Xóa bộ hẹn giờ theo id
+
+
++ Parameters
+    + uuid (required, string, `PsxUPldlbBNEuEUTi7Ci5yls77R2`) ... User ID - ID người dùng mà bạn dùng để điều khiển thiết bị. Xem trong app
+    + node_id (required, string, `r1O92dtSz`) ... Node ID - ID của node cảm biến / thiết bị của bạn. Xem trong app
+    + token (required, string, `301fd2e614a97927804613e73373ded2991661182107`) ... API Token - Token do bạn tạo ra trong app để điều khiển các thiết bị
+
++ Request (application/json)
+ 
+ 
+    + Attributes (ITimerBlock)
+        + method: DELETE (string, optional) - `DELETE - xóa block`
+    
+    + Body
+
+            {
+                "status": 0
+            }
+            
+
++ Response 200 (application/json)
+    + Body
+
+    
+            {
+                "status": 0
+            }
+        
+    + Attributes (Request Result)
+            
+## Data Structures
+
+### ITimerBlock 
++ timer_id: 2 (number, required) - `id block hẹn giờ được trang bị`
+
+
+
+### TimerBlock (ITimerBlock)
++ command: `TOGGLE` (string, optional) - Tên lệnh: `TOGGLE`, `ON`, `OFF`
++ days_in_week: `0,1,2,3,4,5,6` (string, optional) - `Các ngày trong tuần, 0 - chủ nhật, 6 - thứ bảy, cách nhau bởi dấu phẩy`
++ device_id: 0  (number, optional) - `id thiết bị trong node`
++ enabled: 1  (number, optional) - `kích hoạt bộ timer hay không? 1 - kích hoạt luôn, 0 - chưa kích hoạt`
++ end: 0 (number, optional) - `thời điểm dừng hoạt động của bộ timer, 0 - là không kích hoạt chức năng này. Tính theo unixtimestamp`
++ start: 0 (number, optional) - `thời điểm bắt đầu hoạt động của bộ timer, 0 - là không kích hoạt chức năng này. Tính theo unixtimestamp`
++ timer_type: 1 (number, optional) - `Loại hẹn giờ. 1 - loại lặp lại INTERVAL; 2 - loại chính xác thời điểm TIME EXACTLY`
++ name: "" (string, optional) - `Loại hẹn giờ. 1 - loại lặp lại INTERVAL; 2 - loại chính xác thời điểm TIME EXACTLY`
++ excute_at: 1 (number, optional) - `thời gian lặp lại của bộ hẹn giờ { đối với bé hơn 86400 } hoặc là thời điểm theo giờ phút giây tại ngày 1/1/2000 
+{ còn lại, có thể dán con số hiển thị vào https://www.unixtimestamp.com để thêm thông tin}`
+
+### Request Result        
++ status: 0 (number, required) - `0 - Request diễn ra tốt, -1 - có lỗi`
++ message: "" (string, optional) - `chỉ khi nào -1 thì biến này mới xuất hiện`
+
+### Toggle Request
++ id: 0 (number, required) - `id thiết bị`
++ command: `TOGGLE` (string, required) - `Lệnh ON, OFF, TOGGLE`
+
+### Device
++ node_id: `Ddj23sj2` (string, required) - `tên node (tên nhóm thiết bị(`
++ id: 0 (number, required) - `id thiết bị trong node`
++ state: `TOGGLE` (string, required) - `trạng thái thiết bị / giá trị cảm biến`
++ type: `TOGGLE` (string, required) - `loại thiết bị: TOGGLE, SENSOR,...`
