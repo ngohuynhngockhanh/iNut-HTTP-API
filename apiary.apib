@@ -75,6 +75,40 @@ Cập nhập trạng thái thiết bị TOGGLE. Bạn có thể gửi lệnh B�
             }
         
     + Attributes (Request Result)
+    
+## Gửi lệnh đến CẢM BIẾN - [/request/{uuid}/{node_id}/{token}/req_device_sensor]
+
+### Cập nhập trạng thái thiết bị CẢM BIẾN [POST]
+
+Cập nhập trạng thái thiết bị TOGGLE. Bạn có thể gửi lệnh BẬT, TẮT, ĐỔI TRẠNG THÁI cho các thiết bị TOGGLE
+
+        
++ Parameters
+    + uuid (required, string, `PsxUPldlbBNEuEUTi7Ci5yls77R2`) ... User ID - ID người dùng mà bạn dùng để điều khiển thiết bị. Xem trong app
+    + node_id (required, string, `r1O92dtSz`) ... Node ID - ID của node cảm biến / thiết bị của bạn. Xem trong app
+    + token (required, string, `301fd2e614a97927804613e73373ded2991661182107`) ... API Token - Token do bạn tạo ra trong app để điều khiển các thiết bị
+
++ Request (application/json)
+    + Body
+
+            {
+                "id": 0,
+                "command": "TOGGLE"
+            }
+            
+            
+    + Attributes (Sensor Request)
+    
+
++ Response 200 (application/json)
+    + Body
+
+    
+            {
+                "status": 0
+            }
+        
+    + Attributes (Request Result)
 
 
 ## Xem thông tin hẹn giờ [/request/{uuid}/{node_id}/{token}/req_timer]
@@ -310,6 +344,10 @@ Xóa bộ hẹn giờ theo id
 ### Toggle Request
 + id: 0 (number, required) - `id thiết bị`
 + command: `TOGGLE` (string, required) - `Lệnh ON, OFF, TOGGLE`
+
+### Sensor Request
++ id: 0 (number, required) - `id thiết bị`
++ command: `32 ký tự` (string, required) - `Là chuỗi, tối đa 32 ký tự`
 
 ### Device
 + node_id: `Ddj23sj2` (string, required) - `tên node (tên nhóm thiết bị(`
